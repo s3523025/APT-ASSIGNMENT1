@@ -2,11 +2,11 @@
 #include <iostream>
 
 PathSolver::PathSolver() {
-    this->nodesExplored = new NodeList();
+    nodesExplored = new NodeList();
 }
 
 PathSolver::~PathSolver() {
-    delete this->nodesExplored;
+    //delete this->nodesExplored;
 }
 
 void PathSolver::forwardSearch(Env env) {
@@ -29,8 +29,7 @@ void PathSolver::forwardSearch(Env env) {
             // Find End Pos
             if (env[x][y] == SYMBOL_GOAL) {
                 G = new Node(x, y, 0);
-                std::cout << "Goal position is [" << x << "][" << y << "]\n";
-                std::cout << "G: " << G << std::endl;
+                std::cout << "Goal position is [" << x << "][" << y << "]\n" << std::endl;;
             }
         }
     }
@@ -74,185 +73,89 @@ void PathSolver::forwardSearch(Env env) {
             if (!O->contains(up) && !C->contains(up)) {
                 O->addElement(up);
                 std::cout << "Adding Node[" << up->getRow() << "][" << up->getCol() << "]\n";
-                this->nodesExplored->addElement(up); // Add the current node to nodesExplored
+                
             }
         }
         if (goDown) {
             if (!O->contains(down) && !C->contains(down)) {
                 O->addElement(down);
                 std::cout << "Adding Node[" << down->getRow() << "][" << down->getCol() << "]\n";
-                this->nodesExplored->addElement(down); // Add the current node to nodesExplored
+           
             }
         }
         if (goLeft) {
             if (!O->contains(left) && !C->contains(left)) {
                 O->addElement(left);
                 std::cout << "Adding Node[" << left->getRow() << "][" << left->getCol() << "]\n";
-                this->nodesExplored->addElement(left); // Add the current node to nodesExplored
+         
             }
         }
         if (goRight) {
             if (!O->contains(right) && !C->contains(right)) {
                 O->addElement(right);
                 std::cout << "Adding Node[" << right->getRow() << "][" << right->getCol() << "]\n";
-                this->nodesExplored->addElement(right); // Add the current node to nodesExplored
+
             }
         }
 
         C->addElement(p); // add a copy of p to the closed list
+        nodesExplored->addElement(p); // Add the current node to nodesExplored
 
         // Check if the current node is the goal
         if (p->getRow() == G->getRow() && p->getCol() == G->getCol()) {
             std::cout << "Goal reached!\n";
             searching = true;
-            std::cout << p;
-            std::cout << "Adding Node[" << p->getRow() << "][" << p->getCol() << "]\n";
+            std::cout << std::endl;
             this->nodesExplored->addElement(p); // Add the goal node to nodesExplored
         }
 
         //free memory
-        
+        delete up;
+        delete down;
+        delete left;
+        delete right;
+
 
     }
     
-
-
-
-    /* //start a loop until The robot reaches the goal, that is, p == G, or no such position p can be found
-    while (O->getLength() > 0 && !searching) {
-        Node* current = O->pop(); //pop the first element from the open list and assign it to p
-        C->addElement(new Node(*current)); // add a copy of p to the closed list
-
-        // Check if the current node is the goal
-        if (current->getRow() == G->getRow() && current->getCol() == G->getCol()) {
-            std::cout << "Goal reached!\n";
-            searching = true;
-            std::cout << current;
-            std::cout << "Adding Node[" << current->getRow() << "][" << current->getCol() << "]\n";
-            this->nodesExplored->addElement(current); // Add the goal node to nodesExplored
-        }
-
-        // Get neighbors of the current node
-        NodeList* neighbours = getNeighbours(current, false);
-        for (int i = 0; i < neighbours->getLength(); i++) {
-            Node* node = neighbours->getNode(i);
-
-            // Confirm it's not already been explored
-            if (!C->contains(node)) {
-                // Confirm it's not a wall
-                if (CheckEmptySpaceByNode(node, env)) {
-                    // Add to explorable positions
-                    O->addElement(node);
-                    std::cout << "Adding Node[" << node->getRow() << "][" << node->getCol() << "]\n";
-                    nodesExplored->addElement(node); // Add the current node to nodesExplored
-                }
-            }
-        }
-    }
- */
-
-
-
-    /*// Search the surrounding start position for empty spaces
-    bool goalReached = false;
-    while (O->getLength() > 0 && !goalReached) {
-        Node* current = O->pop();
-        C->addElement(new Node(*current));  // Add a copy of the current node to the closed list
-
-        // Check if the current node is the goal
-        // Check if the current node is the goal
-        if (current->getRow() == G->getRow() && current->getCol() == G->getCol()) {
-            std::cout << "Goal reached!\n";
-            goalReached = true;
-            std::cout << current;
-            this->nodesExplored->addElement(current);  // Add the goal node to nodesExplored
-        }
-
-
-        // Get neighbors of the current node
-        NodeList* neighbours = getNeighbours(current, true);
-        for (int i = 0; i < neighbours->getLength(); i++) {
-            Node* node = neighbours->getNode(i);
-
-            // Confirm it's not already been explored
-            if (!C->contains(node)) {
-                // Confirm it's not a wall or the goal
-                if (CheckEmptySpaceByNode(node, env) || CheckGoalNodeByNode(node, env)) {
-                    // Add to explorable positions
-                    O->addElement(node);
-                    std::cout << "Adding Node[" << node->getRow() << "][" << node->getCol() << "]\n";
-                    nodesExplored->addElement(node);  // Add the current node to nodesExplored
-                }
-            }
-        }
-    }*/
-
     // Clean up
 
-    std::cout << "DEBUG 3" << std::endl << std::endl;
+    delete S;
+    delete G;
     delete O;
-    std::cout << "DEBUG 4" << std::endl << std::endl;
-    //delete C;
-    std::cout << "DEBUG 5" << std::endl << std::endl;
+    delete C;
+
       
 }
-
-
-/* Node* findNextNode(NodeList& openList, NodeList* closedList) {
-    // Initialize the minimum distance to a large value
-    double minDistance = std::numeric_limits<double>::infinity();
-
-    // Pointer to the node with the smallest estimated distance
-    Node* nextNode = nullptr;
-
-    // Iterate through the open list
-    for (int i = 0; i < openList.getLength(); ++i) {
-        Node* currentNode = openList.getNode(i);
-
-        // Check if the estimated distance is smaller than the current minimum
-        if (currentNode->getEstimatedDist2Goal(G) < minDistance) { // Fix: Pass the 'goal' argument to the getEstimatedDist2Goal() function
-            // Check if the node is not in the closed list
-            if (!closedList->contains(currentNode)) {
-                minDistance = currentNode->getEstimatedDist2Goal(G); // Fix: Pass the 'goal' argument to the getEstimatedDist2Goal() function
-                nextNode = currentNode;
-            }
-        }
-    }
-
-    return nextNode;
-} */
 
 bool PathSolver::hasReachedGoal(Node* current, Node* goal) {
     return (*current == *goal);
 }
 
 NodeList* PathSolver::getNodesExplored() {
-    return nodesExplored;
+    return this->nodesExplored;
 }
 
 NodeList* PathSolver::getPath(Env env){
     NodeList* path = new NodeList();
     //get a deep copy of the nodesExplored list
-    NodeList* nodesExplored = getNodesExplored();
+    //NodeList* nodesExplored = getNodesExplored();
 
     // get the last node in the nodesExplored list which should be the goal node. This is now the current node
     Node* current = nodesExplored->getNode(nodesExplored->getLength() - 1);
 
     path->addElement(current);
-    std::cout << "DEBUG 10" << std::endl;
+
 
     // loop through the nodesExplored list backwards until the start node is found
 for (int i = nodesExplored->getLength() - 1; i >= 0; i--) {
     Node* node = nodesExplored->getNode(i);
-    std::cout << "DEBUG 11" << std::endl;
-    std::cout << "Adding Node[" << node->getRow() << "][" << node->getCol() << "] to the path\n";
 
     // check if the node is adjacent to the current node
     if ((node->getRow() == current->getRow() - 1 && node->getCol() == current->getCol()) ||
         (node->getRow() == current->getRow() + 1 && node->getCol() == current->getCol()) ||
         (node->getRow() == current->getRow() && node->getCol() == current->getCol() - 1) ||
         (node->getRow() == current->getRow() && node->getCol() == current->getCol() + 1)) {
-        std::cout << "DEBUG 12" << std::endl;
         // check if the node is empty
         if (this->isOpenSpace(node, env)) {
             // add the node to the path

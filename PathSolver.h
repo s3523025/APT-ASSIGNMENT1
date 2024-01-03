@@ -59,7 +59,6 @@ private:
     bool CheckGoalNodeByNode(Node* node, Env env);
     Node* findAdjacentNode(Node* current, Env env);
 
-
 };
 
 

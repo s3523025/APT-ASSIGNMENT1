@@ -33,18 +33,24 @@ int NodeList::getLength(){
     return length;
 }
 
-void NodeList::addElement(Node* newPos){
-    if (length < NODE_LIST_ARRAY_MAX_SIZE) {
-        nodes[length] = newPos;
-        length++;
-    }
-    else{
-        std::cout << "Error: NodeList is full. Cannot add more elements." << std::endl;
+void NodeList::addElement(Node* newPos) {
+    // Check if there is space in the array
+    if (this->length < NODE_LIST_ARRAY_MAX_SIZE) {
+        // Add the new node to the end of the array
+        this->nodes[this->length] = new Node(newPos->getRow(), newPos->getCol(), newPos->getDistanceTraveled());
+        this->length++;
     }
 }
 
-Node* NodeList::getNode(int i){
-    return nodes[i];
+Node* NodeList::getNode(int i) {
+    // Check if i is within the bounds of the array
+    if (i < this->length) {
+        // Return the node at index i
+        return this->nodes[i];
+    }
+
+    // Return NULL if i is out of bounds
+    return NULL;
 }
 
 Node* NodeList::getSmallestEstDistance(Node* goalNode, NodeList* closedList) {
@@ -70,6 +76,8 @@ Node* NodeList::getSmallestEstDistance(Node* goalNode, NodeList* closedList) {
 
     return smallestNode;
 }
+
+
 
 
 

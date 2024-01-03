@@ -38,13 +38,13 @@ int main(int argc, char** argv){
 
     // Redirect standard input to the environment file
     std::string envFilePath = argv[1];
-FILE* file = freopen(envFilePath.c_str(), "r", stdin);
+    FILE* file = freopen(envFilePath.c_str(), "r", stdin);
 
-// check if file was opened successfully
-if (file == nullptr) {
-    std::cerr << "Failed to open file: " << envFilePath << std::endl;
-    return 1;
-}
+    // make sure the file opened and provide response
+    if (file == nullptr) {
+        std::cerr << "Failed to open file: " << envFilePath << std::endl;
+        return 1;
+    }
 
     // Load Environment 
     Env env;
@@ -52,17 +52,15 @@ if (file == nullptr) {
 
     // Solve using forwardSearch
     // THIS WILL ONLY WORK IF YOU'VE FINISHED MILESTONE 2
-    std::cout << "Milestone 2 start" << std::endl << std::endl;
     PathSolver* pathSolver = new PathSolver();
     pathSolver->forwardSearch(env);
-    std::cout << "Milestone 2 end" << std::endl << std::endl;
+
     NodeList* exploredPositions = nullptr;
     exploredPositions = pathSolver->getNodesExplored();
 
     // Get the path
     // THIS WILL ONLY WORK IF YOU'VE FINISHED MILESTONE 3
     NodeList* solution = pathSolver->getPath(env);
-
     printEnvStdout(env, solution);
 
     delete pathSolver;
@@ -119,18 +117,18 @@ bool isSafeCharacter(char c){
 
 void printEnvStdout(Env env, NodeList* solution) {
     // print out the environment
-    std::cout << "Printing" << std::endl;
+    std::cout << "\nOriginal Environment" << std::endl;
     for (int i = 0; i < ENV_DIM; ++i) {
         for (int j = 0; j < ENV_DIM; ++j) {
             std::cout << env[i][j];
         }
         std::cout << std::endl;
     }
-    std::cout << solution << std::endl;
+  
 
     // Using the nodes in the solution, change the environment to show the path
     // this loop starts at 1 and end at length - 1 because the first and last nodes are the start and goal nodes
-    std::cout << "Solution path: " << std::endl;
+    std::cout << "\nSolution path: " << std::endl;
     for(int i = 1; i < solution->getLength() - 1; i++){
 
        //if the previous node was to the left of the current node, set the current node to a >
