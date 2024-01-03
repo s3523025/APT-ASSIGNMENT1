@@ -38,13 +38,14 @@ int main(int argc, char** argv){
 
     // Redirect standard input to the environment file
     std::string envFilePath = argv[1];
-    freopen(envFilePath.c_str(), "r", stdin);
+FILE* file = freopen(envFilePath.c_str(), "r", stdin);
 
-    // check if file was opened successfully
-    if(std::cin.fail()) {
-        std::cerr << "Failed to open file: " << envFilePath << std::endl;
-        return 1;
-    }
+// check if file was opened successfully
+if (file == nullptr) {
+    std::cerr << "Failed to open file: " << envFilePath << std::endl;
+    return 1;
+}
+
     // Load Environment 
     Env env;
     readEnvStdin(env);
@@ -125,6 +126,7 @@ void printEnvStdout(Env env, NodeList* solution) {
         }
         std::cout << std::endl;
     }
+    std::cout << solution << std::endl;
 
     // Using the nodes in the solution, change the environment to show the path
     // this loop starts at 1 and end at length - 1 because the first and last nodes are the start and goal nodes
@@ -160,6 +162,8 @@ void printEnvStdout(Env env, NodeList* solution) {
     }
 
 }
+
+
 
 void testNode() {
     std::cout << "TESTING Node" << std::endl;

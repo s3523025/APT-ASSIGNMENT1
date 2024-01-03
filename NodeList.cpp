@@ -25,7 +25,7 @@ Node* NodeList::pop() {
         length--;
         return poppedNode;
     } else {
-        return nullptr;  // or throw an exception if you prefer
+        return nullptr;  
     }
 }
 

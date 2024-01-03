@@ -38,7 +38,7 @@ public:
     /*                                           */
 
     bool hasReachedGoal(Node* current, Node* goal);
-    bool canMoveTo(Node* node, Env env);
+    bool isOpenSpace(Node* node, Env env);
 
 private:
     /*                                           */
