@@ -1,4 +1,21 @@
-﻿#include <iostream>
+﻿/* 
+s3523025 Michael Moon
+
+For this assignment, I approached it by trying to break it down into its simple components. However I had issues
+when it came to implementing Milestone 2 without at least displaying Milestone 3. I needed to see the output to
+know that I was getting on the right path so adopted to work on those 2 Milestones concurrently.
+A encountered an issue which delayed my progress for approximately 8 hours of development. The issue was when it came
+to getting the path for M3, it was returning the correct quantity of nodes found, however the node coordinates were
+set to 0,0. I spent a lot of time trying to figure out why this was happening and eventually found that it was due
+to my addElement function in NodeList.cpp. I was not creating a new node, but rather just adding the pointer to the
+node that was passed in. This meant that when I was changing the values of the node in the open list, it was also
+changing the values of the node in the closed list. This was causing the issue of the node coordinates being set to
+0,0. I fixed this by creating a new node and copying the values of the node passed in. 
+I have only completed Milestones 1, 2 and 3.
+ */
+
+
+#include <iostream>
 #include <fstream>
 #include <stdexcept>
 #include <string>
@@ -30,23 +47,6 @@ int main(int argc, char** argv){
     // testNode();
     // testNodeList();
     // std::cout << "DONE TESTING" << std::endl << std::endl;
-    
-    // Check if environment file is provided
-    if(argc < 2) {
-        std::cerr << "Include an environment file as part of a command line argument.\n";
-        std::cerr << "Example: ./pathfinder test1.env\n";
-        return 1;
-    }
-
-    // Redirect input to the env
-    std::string envFilePath = argv[1];
-    FILE* file = freopen(envFilePath.c_str(), "r", stdin);
-
-    // make sure the file opened and provide response
-    if (file == nullptr) {
-        std::cerr << "Couldn't open file: " << envFilePath << std::endl;
-        return 1;
-    }
 
     // Load Environment 
     Env env;
@@ -132,7 +132,7 @@ void printEnvStdout(Env env, NodeList* solution) {
     // print out the environment with the path
     int i;
     for (i = 0; i < ENV_DIM; ++i) {
-        for (int j = 0; j < ENV_DIM; ++j) {
+        for (int j = 0; j < ENV_DIM; ++j) {`
             std::cout << env[i][j];
         }
         // Add a newline character after each row
