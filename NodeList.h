@@ -13,10 +13,6 @@ public:
     // Constructor/Desctructor
     NodeList();
     ~NodeList();
-
-    Node* pop();
-
-
     // Copy Constructor
     // Produces a DEEP COPY of the NodeList
     NodeList(NodeList& other);

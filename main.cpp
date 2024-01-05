@@ -26,23 +26,25 @@ int main(int argc, char** argv){
     // AS YOU WORK ON MILESTONE 2. YOU CAN UPDATE THEM YOURSELF
     // AS YOU GO ALONG.
     // COMMENT THESE OUT BEFORE YOU SUBMIT!!!
-    std::cout << "TESTING - COMMENT THE OUT TESTING BEFORE YOU SUBMIT!!!" << std::endl;
-    testNode();
-    testNodeList();
-    std::cout << "DONE TESTING" << std::endl << std::endl;
+    // std::cout << "TESTING - COMMENT THE OUT TESTING BEFORE YOU SUBMIT!!!" << std::endl;
+    // testNode();
+    // testNodeList();
+    // std::cout << "DONE TESTING" << std::endl << std::endl;
+    
     // Check if environment file is provided
     if(argc < 2) {
-        std::cerr << "Please provide an environment file as a command line argument.\n";
+        std::cerr << "Include an environment file as part of a command line argument.\n";
+        std::cerr << "Example: ./pathfinder test1.env\n";
         return 1;
     }
 
-    // Redirect standard input to the environment file
+    // Redirect input to the env
     std::string envFilePath = argv[1];
     FILE* file = freopen(envFilePath.c_str(), "r", stdin);
 
     // make sure the file opened and provide response
     if (file == nullptr) {
-        std::cerr << "Failed to open file: " << envFilePath << std::endl;
+        std::cerr << "Couldn't open file: " << envFilePath << std::endl;
         return 1;
     }
 
@@ -63,6 +65,7 @@ int main(int argc, char** argv){
     NodeList* solution = pathSolver->getPath(env);
     printEnvStdout(env, solution);
 
+    //std::cout << std::endl;
     delete pathSolver;
     delete exploredPositions;
     delete solution;
@@ -81,34 +84,10 @@ void readEnvStdin(Env env){
             ++col;
         }
     }
-
-    //std::cout << "Environment loaded from stdin" << std::endl;
-
 }
-/*void readEnvStdin(Env env){
-	//Read in the 20x20 environemnt file .env from the Milestone1Tests folder
-    std::ifstream file("../Milestone1Tests/test1.env");
-    char c;
-    if (file.is_open()){
-        for (int i = 0; i < ENV_DIM; i++){
-            for (int j = 0; j < ENV_DIM;){
-                file.get(c);
-                if (isSafeCharacter(c)) {
-                    env[i][j] = c;
-                    j++;
-                }
-            }
-        }
-    }
-    else{
-        std::cout << "Could not open file";
-    }
-    file.close();
-}*/
-
-
 
 bool isSafeCharacter(char c){
+    //Make sure the character is one of the valid types
     if (c == SYMBOL_EMPTY || c==SYMBOL_START || c==SYMBOL_GOAL || c==SYMBOL_WALL){
         return true;
     }
@@ -116,52 +95,56 @@ bool isSafeCharacter(char c){
 }
 
 void printEnvStdout(Env env, NodeList* solution) {
-    // print out the environment
-    std::cout << "\nOriginal Environment" << std::endl;
-    for (int i = 0; i < ENV_DIM; ++i) {
-        for (int j = 0; j < ENV_DIM; ++j) {
-            std::cout << env[i][j];
-        }
-        std::cout << std::endl;
-    }
+    // print out the environment for display test purposes
+    // std::cout << "\nOriginal Environment" << std::endl;
+    // for (int i = 0; i < ENV_DIM; ++i) {
+    //     for (int j = 0; j < ENV_DIM; ++j) {
+    //         std::cout << env[i][j];
+    //     }
+    //     std::cout << "\n";
+    // }
   
-
     // Using the nodes in the solution, change the environment to show the path
-    // this loop starts at 1 and end at length - 1 because the first and last nodes are the start and goal nodes
-    std::cout << "\nSolution path: " << std::endl;
-    for(int i = 1; i < solution->getLength() - 1; i++){
+    //std::cout << "Solution path: " << std::endl;
+    //Starts at 1 and -1 because first is start node and last is goal node
+    for(int i = 1; i < solution->getLength() - 1; i++) {
+        int rowDiff = solution->getNode(i + 1)->getRow() - solution->getNode(i)->getRow();
+        int colDiff = solution->getNode(i + 1)->getCol() - solution->getNode(i)->getCol();
 
-       //if the previous node was to the left of the current node, set the current node to a >
-        if(solution->getNode(i - 1)->getCol() < solution->getNode(i)->getCol()){
-            env[solution->getNode(i)->getRow()][solution->getNode(i)->getCol()] = '>';
-        }
-        //if the previous node was to the right of the current node, set the current node to a <
-        else if(solution->getNode(i - 1)->getCol() > solution->getNode(i)->getCol()){
-            env[solution->getNode(i)->getRow()][solution->getNode(i)->getCol()] = '<';
-        }
-        //if the previous node was above the current node, set the current node to a v
-        else if(solution->getNode(i - 1)->getRow() < solution->getNode(i)->getRow()){
+        // If the next node is below the current node, set the current node to a 'v'
+        if(rowDiff > 0) {
             env[solution->getNode(i)->getRow()][solution->getNode(i)->getCol()] = 'v';
         }
-        //if the previous node was below the current node, set the current node to a ^
-        else if(solution->getNode(i - 1)->getRow() > solution->getNode(i)->getRow()){
+        // If the next node is above the current node, set the current node to a '^'
+        else if(rowDiff < 0) {
             env[solution->getNode(i)->getRow()][solution->getNode(i)->getCol()] = '^';
         }
-
+        // If the next node is to the right of the current node, set the current node to a '>'
+        else if(colDiff > 0) {
+            env[solution->getNode(i)->getRow()][solution->getNode(i)->getCol()] = '>';
+        }
+        // If the next node is to the left of the current node, set the current node to a '<'
+        else if(colDiff < 0) {
+            env[solution->getNode(i)->getRow()][solution->getNode(i)->getCol()] = '<';
+        }
     }
 
-
     // print out the environment with the path
-    for (int i = 0; i < ENV_DIM; ++i) {
+    int i;
+    for (i = 0; i < ENV_DIM; ++i) {
         for (int j = 0; j < ENV_DIM; ++j) {
             std::cout << env[i][j];
         }
-        std::cout << std::endl;
+        // Add a newline character after each row
+        if (i < ENV_DIM - 1) {
+            std::cout << "\n";
+        }
     }
-
+    // Check if it's the last line before adding a newline
+    if (i < ENV_DIM - 1) {
+        std::cout << "\n";
+    }
 }
-
-
 
 void testNode() {
     std::cout << "TESTING Node" << std::endl;

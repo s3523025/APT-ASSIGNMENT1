@@ -15,14 +15,9 @@ public:
     PathSolver();
     ~PathSolver();
 
-
-
-
     // Execute forward search algorithm
     // To be implemented for Milestone 2
     void forwardSearch(Env env);
-
-
 
     // Get a DEEP COPY of the explored NodeList in forward search
     // To be implemented for Milestone 2
@@ -51,14 +46,6 @@ private:
     /*                                           */
     /* YOU MAY ADD YOUR MODIFICATIONS HERE       */
     /*                                           */
-    NodeList* getNeighbours(Node* node, bool cond);
-    bool CheckEmptySpace(Env env, int get_row, int get_col);
-    bool CheckEmptySpaceByNode(Node* node, Env env);
-    void exploreNeighbors(Node* current, Node* goal, const Env& env, NodeList* openList, NodeList* closedList);
-    void reconstructPath(Node* start, Node* goal);
-    bool CheckGoalNodeByNode(Node* node, Env env);
-    Node* findAdjacentNode(Node* current, Env env);
-
 };
 
 
