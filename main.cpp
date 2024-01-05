@@ -132,7 +132,7 @@ void printEnvStdout(Env env, NodeList* solution) {
     // print out the environment with the path
     int i;
     for (i = 0; i < ENV_DIM; ++i) {
-        for (int j = 0; j < ENV_DIM; ++j) {`
+        for (int j = 0; j < ENV_DIM; ++j) {
             std::cout << env[i][j];
         }
         // Add a newline character after each row
